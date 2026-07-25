@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { ArrowRight, RefreshCw, Sparkles, Beer, Send, Swords, Shuffle } from 'lucide-react';
+import { ArrowRight, RefreshCw, Sparkles, Swords, Shuffle } from 'lucide-react';
 import { GameRoom, Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
@@ -36,7 +36,6 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
   isHost,
   onNextRound,
   onRestartGame,
-  onUseSkipToken,
 }) => {
   const activeRound = room.activeRound;
   const isTie = Boolean(activeRound?.isTie && (activeRound?.tiedPlayerIds?.length || 0) > 1);
@@ -45,10 +44,8 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
 
   const [step, setStep] = useState<number>(0);
   const [rouletteIndex, setRouletteIndex] = useState<number>(0);
-  const [acceptedShot, setAcceptedShot] = useState<boolean>(false);
 
   useEffect(() => {
-    // If it's a tie, sequence gives 5.5s for step 2 (showing tied players + roulette spin)!
     const delayStep1 = 400;
     const delayStep2 = 1400;
     const delayStep3 = isTie ? 5400 : 2700;
@@ -105,13 +102,6 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
       return () => clearInterval(interval);
     }
   }, [step, isTie, tiedPlayers.length]);
-
-  const isLoser = winnerPlayer?.id === currentPlayer.id;
-
-  const handleAcceptShot = () => {
-    audioManager.playShotBuzzer();
-    setAcceptedShot(true);
-  };
 
   return (
     <motion.div
@@ -253,7 +243,7 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
 
             {/* Notification / Status Card */}
             {isTie && (
-              <div className="mt-2 px-3 py-1 rounded-full bg-rose-500/20 text-xs font-black text-rose-900 border border-rose-400/50 inline-block">
+              <div className="mt-2 px-3 py-1 rounded-full bg-rose-500/20 text-xs font-black text-rose-900 border border-rose-400/50 inline-block mb-2">
                 🎲 Picked By Fate in {tiedPlayers.length}-Way Tie Draw!
               </div>
             )}
@@ -262,49 +252,18 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
               <div className="mt-3 p-3.5 rounded-2xl bg-amber-400/40 text-sm font-black text-forest-950 border-2 border-amber-500 shadow-sm">
                 ⚡ CHALLENGE PASSED! {skippedBy.fromPlayerName} passed the challenge to {skippedBy.toPlayerName}! 🍋
               </div>
-            ) : acceptedShot ? (
-              <div className="mt-3 p-3.5 rounded-2xl bg-rose-500/25 text-sm font-black text-rose-900 border-2 border-rose-500 shadow-sm">
-                🍺 TAKING THE LEMON SHOT! Bottoms up! 🥃 🍋
-              </div>
             ) : (
-              <div className="mt-3 p-3 rounded-2xl bg-rose-500/15 border-2 border-rose-500/40">
-                <p className="font-heading text-base font-extrabold text-rose-900 uppercase tracking-wider">
-                  You Have Been Selected!
+              <div className="mt-3 p-4 rounded-2xl bg-rose-500/20 border-2 border-rose-500/50 shadow-inner">
+                <p className="font-heading text-lg sm:text-2xl font-black text-rose-900 tracking-tight">
+                  🎉 You are the lucky guy! 🍋
                 </p>
-                <p className="font-heading text-xs font-bold text-forest-800">
-                  Pass the challenge or take the Lemon Shot!
+                <p className="font-heading text-sm sm:text-base font-bold text-forest-950 mt-0.5">
+                  Must drink the Lemon Shot!
                 </p>
               </div>
             )}
 
             <div className="text-3xl my-2">😂</div>
-
-            {/* WINNER ACTIONS: PASS CHALLENGE vs HAVE THE SHOT (Only for regular non-host players!) */}
-            {isLoser && !isHost && !skippedBy && !acceptedShot && (
-              <div className="mt-4 flex flex-col gap-2.5">
-                {onUseSkipToken && (
-                  <LemonButton
-                    variant="skip"
-                    size="lg"
-                    icon={<Send className="h-5 w-5" />}
-                    onClick={onUseSkipToken}
-                    className="w-full text-base py-3 shadow-md"
-                  >
-                    PASS CHALLENGE TO ANOTHER PERSON ⚡
-                  </LemonButton>
-                )}
-
-                <LemonButton
-                  variant="danger"
-                  size="lg"
-                  icon={<Beer className="h-5 w-5" />}
-                  onClick={handleAcceptShot}
-                  className="w-full text-base py-3 shadow-md"
-                >
-                  HAVE THE LEMON SHOT 🥃
-                </LemonButton>
-              </div>
-            )}
 
             {/* Host Controls */}
             <div className="mt-6 pt-4 border-t border-forest-900/15">
