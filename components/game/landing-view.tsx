@@ -39,7 +39,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
     setValidationError('');
 
     if (isAdminMode) {
-      // Fixed Admin Credentials Check: Username "admin" & Password "admin"
+      // Admin Credentials Check: Username "admin" or "suman", Password "admin"
       const cleanUser = adminUsername.trim().toLowerCase();
       const cleanPass = adminPassword.trim();
 
@@ -49,15 +49,15 @@ export const LandingView: React.FC<LandingViewProps> = ({
         return;
       }
 
-      if (cleanUser !== 'admin' || cleanPass !== 'admin') {
+      if ((cleanUser !== 'admin' && cleanUser !== 'suman') || cleanPass !== 'admin') {
         audioManager.playShotBuzzer();
-        setValidationError('Invalid Admin Credentials! (Use: admin / admin)');
+        setValidationError('Invalid Admin Credentials!');
         return;
       }
 
       audioManager.playPop();
-      // Admin logs in as Host
-      onCreateRoom('Admin Host', selectedAvatar);
+      // Admin name is Suman!
+      onCreateRoom('Suman', selectedAvatar);
     } else {
       // Regular Player Join Validation (Name AND Room Key are mandatory!)
       if (!name.trim()) {
@@ -131,7 +131,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 {isAdminMode ? '👑 Admin Login' : 'Vote wisely...'}
               </p>
               <p className="text-[11px] sm:text-xs font-extrabold text-rose-700 uppercase tracking-wider">
-                {isAdminMode ? 'Login with fixed admin credentials' : 'Someone has to drink the Lemon Shot.'}
+                {isAdminMode ? 'Login to control the party room' : 'Someone has to drink the Lemon Shot.'}
               </p>
             </div>
           </div>
@@ -216,7 +216,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </>
             )}
 
-            {/* ADMIN LOGIN FORM (Fixed creds: admin / admin) */}
+            {/* ADMIN LOGIN FORM (No Credential Mentions!) */}
             {isAdminMode && (
               <>
                 <div>
@@ -231,7 +231,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                       setAdminUsername(e.target.value);
                       if (validationError) setValidationError('');
                     }}
-                    placeholder="Username (admin)"
+                    placeholder="Enter Admin Username"
                     required
                     className="w-full text-center font-heading text-lg font-bold rounded-2xl bg-white/95 border-3 border-amber-400 px-4 py-3 text-forest-950 placeholder-forest-800/40 focus:outline-none focus:ring-4 focus:ring-amber-300/60 transition-all shadow-inner"
                   />
@@ -249,7 +249,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                       setAdminPassword(e.target.value);
                       if (validationError) setValidationError('');
                     }}
-                    placeholder="Password (admin)"
+                    placeholder="Enter Admin Password"
                     required
                     className="w-full text-center font-heading text-lg font-bold rounded-2xl bg-white/95 border-3 border-amber-400 px-4 py-3 text-forest-950 placeholder-forest-800/40 focus:outline-none focus:ring-4 focus:ring-amber-300/60 transition-all shadow-inner"
                   />
