@@ -98,7 +98,7 @@ export const MostLikelyToView: React.FC<MostLikelyToViewProps> = ({
       >
         <span className="px-3.5 py-1 rounded-full bg-forest-900 text-xs font-black text-lemon-300 uppercase tracking-widest inline-flex items-center gap-1.5">
           <Volume2 className="h-4 w-4 text-lemon-400 animate-pulse" />
-          <span>ROUND {activeRound.roundNumber} / {activeRound.totalRounds} • SUPERLATIVE VOTING</span>
+          <span>ROUND {activeRound.roundNumber} • SUPERLATIVE VOTING</span>
         </span>
 
         {/* Animated Microphone & Lemon Graphic */}

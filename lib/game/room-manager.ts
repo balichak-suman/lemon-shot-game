@@ -19,12 +19,12 @@ class RoomManager {
     const code = this.generateCode();
     const hostPlayer: Player = {
       id: hostSocketId,
-      name: hostName || 'Party Host',
+      name: hostName || 'Suman',
       avatar: avatar || 'lemon-king',
       isHost: true,
       isReady: true,
       shotsTaken: 0,
-      skipsRemaining: 3, // Each player starts with 3 Skip Tokens!
+      skipsRemaining: 99, // Unlimited pass ability
       score: 0,
       joinedAt: Date.now(),
     };
@@ -63,8 +63,8 @@ class RoomManager {
       return { error: 'Room not found! Check the room code.' };
     }
 
-    if (room.phase !== 'LOBBY') {
-      return { error: 'Game is already in progress!' };
+    if (room.phase !== 'LOBBY' && room.phase !== 'PLAYING') {
+      return { error: 'Room is unavailable!' };
     }
 
     const player: Player = {
@@ -74,7 +74,7 @@ class RoomManager {
       isHost: false,
       isReady: false,
       shotsTaken: 0,
-      skipsRemaining: 3,
+      skipsRemaining: 99,
       score: 0,
       joinedAt: Date.now(),
     };
@@ -134,7 +134,7 @@ class RoomManager {
 
     const activeRound: ActiveRound = {
       roundNumber: roundIndex + 1,
-      totalRounds: room.rounds.length,
+      totalRounds: 99999, // Infinite rounds!
       type: question.type,
       question,
       phase: 'ACTION',
@@ -169,10 +169,6 @@ class RoomManager {
     const toPlayer = room.players[toPlayerId];
 
     if (!fromPlayer || !toPlayer) return { success: false, message: 'Invalid player selection' };
-    if (fromPlayer.skipsRemaining <= 0) return { success: false, message: 'No Skip Tokens remaining!' };
-
-    // Deduct skip token
-    fromPlayer.skipsRemaining -= 1;
 
     // Transfer shot penalty to target player
     room.activeRound.skippedBy = {
@@ -257,17 +253,13 @@ class RoomManager {
     return round;
   }
 
+  // Unlimited rounds flow!
   public nextRound(code: string): GameRoom | undefined {
     const room = this.getRoom(code);
     if (!room) return undefined;
 
     room.currentRoundIndex += 1;
-
-    if (room.currentRoundIndex >= room.rounds.length) {
-      room.phase = 'GAME_OVER';
-    } else {
-      this.startRound(room, room.currentRoundIndex);
-    }
+    this.startRound(room, room.currentRoundIndex);
 
     room.updatedAt = Date.now();
     return room;

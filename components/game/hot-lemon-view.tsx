@@ -45,7 +45,7 @@ export const HotLemonView: React.FC<HotLemonViewProps> = ({
         <div className="flex items-center justify-between mb-3">
           <span className="px-3.5 py-1 rounded-full bg-forest-900 text-xs font-bold text-lime-300 flex items-center gap-1.5">
             <Flame className="h-4 w-4 text-amber-400 animate-bounce" />
-            ROUND {activeRound.roundNumber} / {activeRound.totalRounds} • HOT LEMON BOMB PASS
+            ROUND {activeRound.roundNumber} • HOT LEMON BOMB PASS
           </span>
 
           {!isResultPhase && (

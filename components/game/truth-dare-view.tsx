@@ -48,7 +48,7 @@ export const TruthDareView: React.FC<TruthDareViewProps> = ({
       <GlassCard variant="glow" hoverEffect={false} className="mb-6 text-center p-6 border-4 border-amber-400">
         <div className="flex items-center justify-between mb-3">
           <span className="px-3.5 py-1 rounded-full bg-forest-900 text-xs font-bold text-amber-300">
-            ROUND {activeRound.roundNumber} / {activeRound.totalRounds} • REUNION TRUTH OR DARE
+            ROUND {activeRound.roundNumber} • REUNION TRUTH OR DARE
           </span>
 
           {!isResultPhase && (
