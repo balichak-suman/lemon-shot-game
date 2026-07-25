@@ -274,8 +274,8 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
 
             <div className="text-3xl my-2">😂</div>
 
-            {/* WINNER ACTIONS: PASS CHALLENGE vs HAVE THE SHOT */}
-            {isLoser && !skippedBy && !acceptedShot && (
+            {/* WINNER ACTIONS: PASS CHALLENGE vs HAVE THE SHOT (Only for regular non-host players!) */}
+            {isLoser && !isHost && !skippedBy && !acceptedShot && (
               <div className="mt-4 flex flex-col gap-2.5">
                 {onUseSkipToken && (
                   <LemonButton
