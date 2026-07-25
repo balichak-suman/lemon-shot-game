@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
-import { cn } from '@/lib/utils';
+import { cn } from '../../lib/utils';
 
 export interface GlassCardProps extends HTMLMotionProps<'div'> {
   variant?: 'light' | 'dark' | 'glow' | 'accent' | 'linear';
