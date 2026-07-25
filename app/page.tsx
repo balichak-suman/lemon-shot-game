@@ -3,15 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
 import { ShieldCheck, UserCheck } from 'lucide-react';
-import { ActiveRound, GameRoom, Player } from '@/lib/game/types';
-import { AnimatedBackground } from '@/components/ui/animated-background';
-import { LandingView } from '@/components/game/landing-view';
-import { LobbyView } from '@/components/game/lobby-view';
-import { MostLikelyToView } from '@/components/game/most-likely-to-view';
-import { HotLemonView } from '@/components/game/hot-lemon-view';
-import { TruthDareView } from '@/components/game/truth-dare-view';
-import { LeaderboardView } from '@/components/game/leaderboard-view';
-import { AdminDashboard } from '@/components/game/admin-dashboard';
+import { ActiveRound, GameRoom, Player } from '../lib/game/types';
+import { AnimatedBackground } from '../components/ui/animated-background';
+import { LandingView } from '../components/game/landing-view';
+import { LobbyView } from '../components/game/lobby-view';
+import { MostLikelyToView } from '../components/game/most-likely-to-view';
+import { HotLemonView } from '../components/game/hot-lemon-view';
+import { TruthDareView } from '../components/game/truth-dare-view';
+import { LeaderboardView } from '../components/game/leaderboard-view';
+import { AdminDashboard } from '../components/game/admin-dashboard';
 
 let socket: Socket;
 

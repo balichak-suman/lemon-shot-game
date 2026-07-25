@@ -4,11 +4,11 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { Trophy, RefreshCw, Sparkles, Shield, Beer } from 'lucide-react';
-import { GameRoom, Player } from '@/lib/game/types';
+import { GameRoom, Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar } from '../ui/lemon-avatar';
-import { audioManager } from '@/lib/game/audio-manager';
+import { audioManager } from '../../lib/game/audio-manager';
 
 export interface LeaderboardViewProps {
   room: GameRoom;

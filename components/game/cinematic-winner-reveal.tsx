@@ -4,11 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
 import { ArrowRight, RefreshCw, Zap, Sparkles, Beer, Send } from 'lucide-react';
-import { Player } from '@/lib/game/types';
+import { Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar } from '../ui/lemon-avatar';
-import { audioManager } from '@/lib/game/audio-manager';
+import { audioManager } from '../../lib/game/audio-manager';
 
 export interface CinematicWinnerRevealProps {
   winnerPlayer: Player | null;

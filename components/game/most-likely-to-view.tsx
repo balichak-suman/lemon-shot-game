@@ -3,14 +3,14 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, ShieldAlert, Zap, AlertTriangle, ArrowRight, Volume2 } from 'lucide-react';
-import { ActiveRound, GameRoom, Player } from '@/lib/game/types';
+import { ActiveRound, GameRoom, Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar } from '../ui/lemon-avatar';
 import { CircularCountdown } from '../ui/countdown';
 import { GlassDialog } from '../ui/glass-dialog';
 import { CinematicWinnerReveal } from './cinematic-winner-reveal';
-import { audioManager } from '@/lib/game/audio-manager';
+import { audioManager } from '../../lib/game/audio-manager';
 
 export interface MostLikelyToViewProps {
   room: GameRoom;

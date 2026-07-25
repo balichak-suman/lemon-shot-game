@@ -6,7 +6,7 @@ import { ShieldCheck, UserCheck, Sparkles, Volume2, VolumeX, AlertCircle, KeyRou
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar, LEMON_AVATARS } from '../ui/lemon-avatar';
-import { audioManager } from '@/lib/game/audio-manager';
+import { audioManager } from '../../lib/game/audio-manager';
 
 export interface LandingViewProps {
   onCreateRoom: (name: string, avatar: string) => void;

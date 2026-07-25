@@ -3,12 +3,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Flame, Send, ArrowRight, Volume2 } from 'lucide-react';
-import { ActiveRound, GameRoom, Player } from '@/lib/game/types';
+import { ActiveRound, GameRoom, Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar } from '../ui/lemon-avatar';
 import { CircularCountdown } from '../ui/countdown';
-import { audioManager } from '@/lib/game/audio-manager';
+import { audioManager } from '../../lib/game/audio-manager';
 
 export interface HotLemonViewProps {
   room: GameRoom;

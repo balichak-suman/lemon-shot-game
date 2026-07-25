@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Crown, Copy, Check, Play, Sparkles, Users } from 'lucide-react';
-import { GameRoom, Player } from '@/lib/game/types';
+import { GameRoom, Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar } from '../ui/lemon-avatar';
-import { audioManager } from '@/lib/game/audio-manager';
+import { audioManager } from '../../lib/game/audio-manager';
 
 export interface LobbyViewProps {
   room: GameRoom;

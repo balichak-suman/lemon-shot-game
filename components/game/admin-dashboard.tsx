@@ -16,12 +16,12 @@ import {
   Users,
   X,
 } from 'lucide-react';
-import { GameRoom, Player } from '@/lib/game/types';
+import { GameRoom, Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar, LEMON_AVATARS } from '../ui/lemon-avatar';
 import { GlassDialog } from '../ui/glass-dialog';
-import { audioManager } from '@/lib/game/audio-manager';
+import { audioManager } from '../../lib/game/audio-manager';
 
 export interface AdminDashboardProps {
   room: GameRoom;

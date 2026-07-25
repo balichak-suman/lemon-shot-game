@@ -3,13 +3,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Zap, ArrowRight, ShieldCheck, Volume2 } from 'lucide-react';
-import { ActiveRound, GameRoom, Player } from '@/lib/game/types';
+import { ActiveRound, GameRoom, Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar } from '../ui/lemon-avatar';
 import { CircularCountdown } from '../ui/countdown';
 import { GlassDialog } from '../ui/glass-dialog';
-import { audioManager } from '@/lib/game/audio-manager';
+import { audioManager } from '../../lib/game/audio-manager';
 
 export interface TruthDareViewProps {
   room: GameRoom;
