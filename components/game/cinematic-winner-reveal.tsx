@@ -1,16 +1,17 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { ArrowRight, RefreshCw, Sparkles, Beer, Send } from 'lucide-react';
-import { Player } from '../../lib/game/types';
+import { ArrowRight, RefreshCw, Sparkles, Beer, Send, Swords, Shuffle } from 'lucide-react';
+import { GameRoom, Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
 import { LemonAvatar } from '../ui/lemon-avatar';
 import { audioManager } from '../../lib/game/audio-manager';
 
 export interface CinematicWinnerRevealProps {
+  room: GameRoom;
   winnerPlayer: Player | null;
   shotsAssigned: number;
   skippedBy?: {
@@ -27,6 +28,7 @@ export interface CinematicWinnerRevealProps {
 }
 
 export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
+  room,
   winnerPlayer,
   shotsAssigned,
   skippedBy,
@@ -36,24 +38,36 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
   onRestartGame,
   onUseSkipToken,
 }) => {
+  const activeRound = room.activeRound;
+  const isTie = activeRound?.isTie && (activeRound?.tiedPlayerIds?.length || 0) > 1;
+  const tiedPlayerIds = activeRound?.tiedPlayerIds || [];
+  const tiedPlayers = tiedPlayerIds.map((id) => room.players[id]).filter(Boolean);
+
   const [step, setStep] = useState<number>(0);
+  const [rouletteIndex, setRouletteIndex] = useState<number>(0);
   const [acceptedShot, setAcceptedShot] = useState<boolean>(false);
 
   useEffect(() => {
+    // If it's a tie, sequence is slightly longer for the roulette spin animation!
+    const delayStep1 = 400;
+    const delayStep2 = 1600;
+    const delayStep3 = isTie ? 5000 : 2700;
+    const delayStep4 = isTie ? 6200 : 3700;
+
     const t1 = setTimeout(() => {
       setStep(1);
       audioManager.playPop();
-    }, 400);
+    }, delayStep1);
 
     const t2 = setTimeout(() => {
       setStep(2);
       audioManager.playTick();
-    }, 1600);
+    }, delayStep2);
 
     const t3 = setTimeout(() => {
       setStep(3);
       audioManager.playTick();
-    }, 2700);
+    }, delayStep3);
 
     const t4 = setTimeout(() => {
       setStep(4);
@@ -68,7 +82,7 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
       } catch {
         // ignore
       }
-    }, 3700);
+    }, delayStep4);
 
     return () => {
       clearTimeout(t1);
@@ -76,7 +90,21 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
       clearTimeout(t3);
       clearTimeout(t4);
     };
-  }, []);
+  }, [isTie]);
+
+  // Roulette Shuffle Animation during Step 2 when it's a tie!
+  useEffect(() => {
+    if (step === 2 && isTie && tiedPlayers.length > 1) {
+      let currentIdx = 0;
+      const interval = setInterval(() => {
+        currentIdx = (currentIdx + 1) % tiedPlayers.length;
+        setRouletteIndex(currentIdx);
+        audioManager.playTick();
+      }, 250);
+
+      return () => clearInterval(interval);
+    }
+  }, [step, isTie, tiedPlayers.length]);
 
   const isLoser = winnerPlayer?.id === currentPlayer.id;
 
@@ -111,8 +139,54 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
         </motion.div>
       )}
 
-      {/* Step 2 & 3: Drum-roll & Suspense Text */}
-      {step >= 2 && step < 4 && (
+      {/* Step 2: TIE DRAW ANNOUNCEMENT & ROULETTE SHUFFLE ANIMATION */}
+      {step >= 2 && step < 4 && isTie && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center my-4 z-20 w-full max-w-md"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-rose-500/30 text-rose-300 text-xs font-black uppercase tracking-widest border border-rose-400/60 shadow-lg animate-pulse mb-2">
+            <Swords className="h-4 w-4 text-rose-400" />
+            <span>⚔️ IT'S A TIE! EQUAL VOTES! ⚔️</span>
+          </div>
+
+          <h2 className="font-heading text-2xl sm:text-4xl font-black text-white tracking-tight drop-shadow-md">
+            Randomly Picking Victim...
+          </h2>
+          <p className="text-xs sm:text-sm font-extrabold text-amber-300 uppercase tracking-wider mt-1 mb-4 flex items-center justify-center gap-1.5">
+            <Shuffle className="h-4 w-4 animate-spin" />
+            <span>Picking between tied players:</span>
+          </p>
+
+          {/* Tied Players Roulette Cards Row */}
+          <div className="flex flex-wrap items-center justify-center gap-3 my-3">
+            {tiedPlayers.map((player, idx) => {
+              const isHighlighted = idx === rouletteIndex && step === 2;
+              return (
+                <motion.div
+                  key={player.id}
+                  animate={isHighlighted ? { scale: 1.18, y: -6 } : { scale: 0.95, y: 0 }}
+                  transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                  className={`p-3 rounded-2xl border-3 backdrop-blur-md transition-all ${
+                    isHighlighted
+                      ? 'bg-lemon-400/90 border-white shadow-[0_0_30px_rgba(250,204,21,0.9)] text-forest-950 font-black'
+                      : 'bg-white/10 border-white/20 text-white font-bold opacity-75'
+                  }`}
+                >
+                  <LemonAvatar avatarId={player.avatar} size="sm" />
+                  <p className="font-heading text-xs font-black mt-1 truncate max-w-[80px]">
+                    {player.name}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+      )}
+
+      {/* Step 2 & 3 Normal Drum-roll for Non-Tie */}
+      {step >= 2 && step < 4 && !isTie && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -173,6 +247,12 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
             </h1>
 
             {/* Notification / Status Card */}
+            {isTie && (
+              <div className="mt-2 px-3 py-1 rounded-full bg-rose-500/20 text-xs font-black text-rose-900 border border-rose-400/50 inline-block">
+                🎲 Picked By Fate in Equal Votes Draw!
+              </div>
+            )}
+
             {skippedBy ? (
               <div className="mt-3 p-3.5 rounded-2xl bg-amber-400/40 text-sm font-black text-forest-950 border-2 border-amber-500 shadow-sm">
                 ⚡ CHALLENGE PASSED! {skippedBy.fromPlayerName} passed the challenge to {skippedBy.toPlayerName}! 🍋

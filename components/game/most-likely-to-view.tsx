@@ -247,6 +247,7 @@ export const MostLikelyToView: React.FC<MostLikelyToViewProps> = ({
       {/* Result Phase Cinematic Winner Reveal */}
       {isResultPhase && (
         <CinematicWinnerReveal
+          room={room}
           winnerPlayer={loserPlayer}
           shotsAssigned={activeRound.shotsAssigned || 1}
           skippedBy={activeRound.skippedBy}

@@ -4,7 +4,6 @@ import { REUNION_QUESTIONS } from './questions';
 class RoomManager {
   private rooms: Map<string, GameRoom> = new Map();
 
-  // Generate 4-letter memorable room code
   private generateCode(): string {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let code = '';
@@ -24,7 +23,7 @@ class RoomManager {
       isHost: true,
       isReady: true,
       shotsTaken: 0,
-      skipsRemaining: 99, // Unlimited pass ability
+      skipsRemaining: 99,
       score: 0,
       joinedAt: Date.now(),
     };
@@ -100,14 +99,12 @@ class RoomManager {
     const removedPlayer = room.players[socketId];
     delete room.players[socketId];
 
-    // If host left, assign new host if players exist
     if (room.hostId === socketId) {
       const remainingIds = Object.keys(room.players);
       if (remainingIds.length > 0) {
         room.hostId = remainingIds[0];
         room.players[remainingIds[0]].isHost = true;
       } else {
-        // Delete room if empty
         this.rooms.delete(room.code);
         return { removedPlayer };
       }
@@ -134,7 +131,7 @@ class RoomManager {
 
     const activeRound: ActiveRound = {
       roundNumber: roundIndex + 1,
-      totalRounds: 99999, // Infinite rounds!
+      totalRounds: 99999,
       type: question.type,
       question,
       phase: 'ACTION',
@@ -170,7 +167,6 @@ class RoomManager {
 
     if (!fromPlayer || !toPlayer) return { success: false, message: 'Invalid player selection' };
 
-    // Transfer shot penalty to target player
     room.activeRound.skippedBy = {
       fromPlayerId: fromPlayer.id,
       fromPlayerName: fromPlayer.name,
@@ -210,7 +206,6 @@ class RoomManager {
     round.phase = 'RESULT';
 
     if (round.type === 'MOST_LIKELY_TO') {
-      // Calculate vote counts
       const voteCounts: Record<string, number> = {};
       Object.values(round.votes).forEach(targetIds => {
         const idList = Array.isArray(targetIds) ? targetIds : [targetIds];
@@ -220,20 +215,26 @@ class RoomManager {
       });
 
       let maxVotes = -1;
-      let loserId = '';
-      Object.entries(voteCounts).forEach(([playerId, count]) => {
-        if (count > maxVotes) {
-          maxVotes = count;
-          loserId = playerId;
-        }
+      Object.values(voteCounts).forEach(count => {
+        if (count > maxVotes) maxVotes = count;
       });
 
-      // If tie or no votes, pick random
-      if (!loserId) {
-        const playerIds = Object.keys(room.players);
-        loserId = playerIds[Math.floor(Math.random() * playerIds.length)];
+      let tiedPlayerIds: string[] = [];
+      if (maxVotes > 0) {
+        tiedPlayerIds = Object.keys(voteCounts).filter(id => voteCounts[id] === maxVotes);
+      } else {
+        tiedPlayerIds = Object.keys(room.players);
       }
 
+      if (tiedPlayerIds.length > 1) {
+        round.isTie = true;
+        round.tiedPlayerIds = tiedPlayerIds;
+      } else {
+        round.isTie = false;
+        round.tiedPlayerIds = undefined;
+      }
+
+      const loserId = tiedPlayerIds[Math.floor(Math.random() * tiedPlayerIds.length)];
       round.loserPlayerId = loserId;
       round.shotsAssigned = round.question.penaltyShots;
 
@@ -253,7 +254,6 @@ class RoomManager {
     return round;
   }
 
-  // Unlimited rounds flow!
   public nextRound(code: string): GameRoom | undefined {
     const room = this.getRoom(code);
     if (!room) return undefined;
