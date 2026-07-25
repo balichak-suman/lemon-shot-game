@@ -254,11 +254,8 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
               </div>
             ) : (
               <div className="mt-3 p-4 rounded-2xl bg-rose-500/20 border-2 border-rose-500/50 shadow-inner">
-                <p className="font-heading text-lg sm:text-2xl font-black text-rose-900 tracking-tight">
+                <p className="font-heading text-xl sm:text-3xl font-black text-rose-900 tracking-tight">
                   🎉 You are the lucky guy! 🍋
-                </p>
-                <p className="font-heading text-sm sm:text-base font-bold text-forest-950 mt-0.5">
-                  Must drink the Lemon Shot!
                 </p>
               </div>
             )}

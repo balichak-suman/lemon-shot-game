@@ -279,29 +279,33 @@ export default function Home() {
       {/* Top Header Controls Bar when in active Room */}
       {room && currentPlayer && (
         <div className="w-full max-w-4xl flex justify-between items-center px-4 mb-2 z-30">
-          {currentPlayer.isHost ? (
-            <button
-              onClick={() => setShowAdminView(!showAdminView)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400 text-forest-950 text-xs font-black shadow-lg hover:bg-amber-300 transition-all cursor-pointer border border-white"
-            >
-              {showAdminView ? (
-                <>
-                  <UserCheck className="h-3.5 w-3.5" /> Game Screen
-                </>
-              ) : (
-                <>
-                  <ShieldCheck className="h-3.5 w-3.5" /> Admin Control
-                </>
-              )}
-            </button>
-          ) : (
-            <div />
-          )}
+          <div className="flex items-center gap-2">
+            <span className="px-3 py-1 rounded-full bg-black/40 backdrop-blur-md border border-lemon-400/40 text-lemon-300 text-xs font-black tracking-wider shadow-sm">
+              ROOM: <span className="text-white font-extrabold">{room.code}</span>
+            </span>
 
-          {/* Exit Game Button (Only quits room when explicitly clicked!) */}
+            {currentPlayer.isHost && (
+              <button
+                onClick={() => setShowAdminView(!showAdminView)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400 text-forest-950 text-xs font-black shadow-lg hover:bg-amber-300 transition-all cursor-pointer border border-white"
+              >
+                {showAdminView ? (
+                  <>
+                    <UserCheck className="h-3.5 w-3.5" /> Game Screen
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck className="h-3.5 w-3.5" /> Admin Control
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+
+          {/* Exit Game Button */}
           <button
             onClick={handleExitGame}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500/25 border border-rose-400/50 text-rose-200 text-xs font-extrabold hover:bg-rose-500/40 transition-all cursor-pointer shadow-sm ml-auto"
+            className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/25 border border-rose-400/50 text-rose-200 text-xs font-extrabold hover:bg-rose-500/40 transition-all cursor-pointer shadow-sm ml-auto"
           >
             <LogOut className="h-3.5 w-3.5" /> Exit Game
           </button>

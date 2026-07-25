@@ -82,25 +82,23 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
           Waiting for Host
         </h1>
 
-        {/* ROOM KEY IS EXCLUSIVELY SHOWN TO THE ADMIN HOST! */}
-        {isHost && (
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-2xl bg-amber-400/30 border-2 border-amber-500 shadow-sm"
+        {/* ROOM KEY DISPLAYED TO ALL PARTICIPANTS */}
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="inline-flex items-center gap-2 mt-3 px-4 py-2 rounded-2xl bg-amber-400/30 border-2 border-amber-500 shadow-sm"
+        >
+          <span className="text-xs font-black uppercase text-forest-950 tracking-wider">ROOM KEY:</span>
+          <span className="font-heading text-2xl font-black tracking-widest text-forest-950">{room.code}</span>
+          <button
+            onClick={handleCopyCode}
+            type="button"
+            className="ml-1 flex h-8 w-8 items-center justify-center rounded-xl bg-lemon-400 text-forest-950 hover:bg-lemon-300 transition-all cursor-pointer shadow-sm"
+            title="Copy Room Key"
           >
-            <span className="text-xs font-black uppercase text-forest-950 tracking-wider">ROOM KEY:</span>
-            <span className="font-heading text-2xl font-black tracking-widest text-forest-950">{room.code}</span>
-            <button
-              onClick={handleCopyCode}
-              type="button"
-              className="ml-1 flex h-8 w-8 items-center justify-center rounded-xl bg-lemon-400 text-forest-950 hover:bg-lemon-300 transition-all cursor-pointer shadow-sm"
-              title="Copy Room Key"
-            >
-              {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-            </button>
-          </motion.div>
-        )}
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          </button>
+        </motion.div>
 
         {/* Connected Players Count Header */}
         <div className="mt-5 flex items-center justify-between border-b border-forest-900/15 pb-2.5">
