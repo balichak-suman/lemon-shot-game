@@ -260,12 +260,12 @@ export const MostLikelyToView: React.FC<MostLikelyToViewProps> = ({
         />
       )}
 
-      {/* Skip Token Dialog */}
+      {/* Pass Challenge Redirect Dialog */}
       <GlassDialog
         isOpen={showSkipModal}
         onClose={() => setShowSkipModal(false)}
-        title="⚡ SKIP THE LEMON SHOT!"
-        description="Select a friend to redirect your penalty shot to:"
+        title="⚡ PASS THE CHALLENGE!"
+        description="Select a friend to redirect the penalty shot to:"
       >
         <div className="grid grid-cols-2 gap-3 my-4">
           {players

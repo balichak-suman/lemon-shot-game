@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
-import { ArrowRight, RefreshCw, Zap, Sparkles, Beer, Send } from 'lucide-react';
+import { ArrowRight, RefreshCw, Sparkles, Beer, Send } from 'lucide-react';
 import { Player } from '../../lib/game/types';
 import { GlassCard } from '../ui/glass-card';
 import { LemonButton } from '../ui/lemon-button';
@@ -36,7 +36,6 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
   onRestartGame,
   onUseSkipToken,
 }) => {
-  // Sequence steps: 0 = Darken/Spotlight, 1 = Lemon Drop, 2 = Drumroll, 3 = Suspense Pause, 4 = WINNER FINALE EXPLOSION!
   const [step, setStep] = useState<number>(0);
   const [acceptedShot, setAcceptedShot] = useState<boolean>(false);
 
@@ -198,7 +197,7 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
             {/* WINNER ACTIONS: PASS CHALLENGE vs HAVE THE SHOT */}
             {isLoser && !skippedBy && !acceptedShot && (
               <div className="mt-4 flex flex-col gap-2.5">
-                {currentPlayer.skipsRemaining > 0 && onUseSkipToken && (
+                {onUseSkipToken && (
                   <LemonButton
                     variant="skip"
                     size="lg"
@@ -206,7 +205,7 @@ export const CinematicWinnerReveal: React.FC<CinematicWinnerRevealProps> = ({
                     onClick={onUseSkipToken}
                     className="w-full text-base py-3 shadow-md"
                   >
-                    PASS CHALLENGE TO ANOTHER PERSON ⚡ ({currentPlayer.skipsRemaining} Left)
+                    PASS CHALLENGE TO ANOTHER PERSON ⚡
                   </LemonButton>
                 )}
 

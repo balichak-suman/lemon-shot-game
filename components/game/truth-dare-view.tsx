@@ -96,9 +96,8 @@ export const TruthDareView: React.FC<TruthDareViewProps> = ({
                 size="lg"
                 icon={<Zap className="h-6 w-6" />}
                 onClick={() => setShowSkipModal(true)}
-                disabled={currentPlayer.skipsRemaining <= 0}
               >
-                SKIP THE SHOT! ({currentPlayer.skipsRemaining} Tokens)
+                PASS THE CHALLENGE! ⚡
               </LemonButton>
             </div>
           </GlassCard>

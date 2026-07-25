@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { ShieldCheck, UserCheck } from 'lucide-react';
+import { ShieldCheck, UserCheck, LogOut } from 'lucide-react';
 import { ActiveRound, GameRoom, Player } from '../lib/game/types';
 import { AnimatedBackground } from '../components/ui/animated-background';
 import { LandingView } from '../components/game/landing-view';
@@ -14,6 +14,8 @@ import { LeaderboardView } from '../components/game/leaderboard-view';
 import { AdminDashboard } from '../components/game/admin-dashboard';
 
 let socket: Socket;
+
+const SESSION_KEY = 'lemon_party_session';
 
 export default function Home() {
   const [room, setRoom] = useState<GameRoom | null>(null);
@@ -27,10 +29,28 @@ export default function Home() {
     setIsClient(true);
     socket = io();
 
+    // Auto-reconnect from localStorage session on refresh
+    const savedSession = localStorage.getItem(SESSION_KEY);
+    let autoReconnecting = false;
+    if (savedSession) {
+      try {
+        const { roomCode, name, avatar } = JSON.parse(savedSession);
+        if (roomCode && name) {
+          autoReconnecting = true;
+          socket.emit('join_room', { roomCode, name, avatar });
+        }
+      } catch {
+        localStorage.removeItem(SESSION_KEY);
+      }
+    }
+
     socket.on('room_created', ({ roomCode, room: newRoom }) => {
       setRoom(newRoom);
       if (socket?.id && newRoom.players[socket.id]) {
-        setCurrentPlayer(newRoom.players[socket.id]);
+        const player = newRoom.players[socket.id];
+        setCurrentPlayer(player);
+        // Persist session to localStorage
+        localStorage.setItem(SESSION_KEY, JSON.stringify({ roomCode, name: player.name, avatar: player.avatar }));
       }
       setError('');
     });
@@ -38,6 +58,8 @@ export default function Home() {
     socket.on('room_joined', ({ player, room: joinedRoom }) => {
       setRoom(joinedRoom);
       setCurrentPlayer(player);
+      // Persist session to localStorage
+      localStorage.setItem(SESSION_KEY, JSON.stringify({ roomCode: joinedRoom.code, name: player.name, avatar: player.avatar }));
       setError('');
     });
 
@@ -86,6 +108,11 @@ export default function Home() {
 
     socket.on('error_message', (msg: string) => {
       setError(msg);
+      if (msg.toLowerCase().includes('not found') || msg.toLowerCase().includes('closed')) {
+        localStorage.removeItem(SESSION_KEY);
+        setRoom(null);
+        setCurrentPlayer(null);
+      }
     });
 
     return () => {
@@ -107,7 +134,7 @@ export default function Home() {
   };
 
   const handleStartGame = () => {
-    setShowAdminView(false); // Auto switch Admin to active player voting screen!
+    setShowAdminView(false);
     if (socket && room) socket.emit('start_game', { roomCode: room.code });
   };
 
@@ -129,6 +156,14 @@ export default function Home() {
 
   const handleRestartGame = () => {
     if (socket && room) socket.emit('restart_game', { roomCode: room.code });
+  };
+
+  // Explicit Exit Game Handler
+  const handleExitGame = () => {
+    localStorage.removeItem(SESSION_KEY);
+    setRoom(null);
+    setCurrentPlayer(null);
+    if (socket) socket.disconnect();
   };
 
   // Admin Specific Handlers
@@ -241,22 +276,34 @@ export default function Home() {
 
   return (
     <AnimatedBackground>
-      {/* Top Bar for Host Admin Toggle */}
-      {room && currentPlayer?.isHost && (
+      {/* Top Header Controls Bar when in active Room */}
+      {room && currentPlayer && (
         <div className="w-full max-w-4xl flex justify-between items-center px-4 mb-2 z-30">
+          {currentPlayer.isHost ? (
+            <button
+              onClick={() => setShowAdminView(!showAdminView)}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-400 text-forest-950 text-xs font-black shadow-lg hover:bg-amber-300 transition-all cursor-pointer border border-white"
+            >
+              {showAdminView ? (
+                <>
+                  <UserCheck className="h-3.5 w-3.5" /> Game Screen
+                </>
+              ) : (
+                <>
+                  <ShieldCheck className="h-3.5 w-3.5" /> Admin Control
+                </>
+              )}
+            </button>
+          ) : (
+            <div />
+          )}
+
+          {/* Exit Game Button (Only quits room when explicitly clicked!) */}
           <button
-            onClick={() => setShowAdminView(!showAdminView)}
-            className="flex items-center gap-2 px-4 py-2 rounded-full bg-amber-400 text-forest-950 text-xs font-black shadow-lg hover:bg-amber-300 transition-all cursor-pointer border border-white"
+            onClick={handleExitGame}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-rose-500/25 border border-rose-400/50 text-rose-200 text-xs font-extrabold hover:bg-rose-500/40 transition-all cursor-pointer shadow-sm ml-auto"
           >
-            {showAdminView ? (
-              <>
-                <UserCheck className="h-4 w-4" /> Switch to Game Screen
-              </>
-            ) : (
-              <>
-                <ShieldCheck className="h-4 w-4" /> Admin Dashboard (Host)
-              </>
-            )}
+            <LogOut className="h-3.5 w-3.5" /> Exit Game
           </button>
         </div>
       )}
