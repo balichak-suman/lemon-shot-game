@@ -1,0 +1,117 @@
+import { Question } from './types';
+
+export const REUNION_QUESTIONS: Question[] = [
+  // ROUND 1: MOST LIKELY TO
+  {
+    id: 'mlt-1',
+    type: 'MOST_LIKELY_TO',
+    prompt: 'Who is most likely to get lost on their way to their own reunion?',
+    category: 'Spicy Nostalgia',
+    timerSeconds: 20,
+    penaltyShots: 1,
+  },
+  {
+    id: 'mlt-2',
+    type: 'MOST_LIKELY_TO',
+    prompt: 'Who has changed the MOST since college / school days?',
+    category: 'College Memories',
+    timerSeconds: 20,
+    penaltyShots: 1,
+  },
+  {
+    id: 'mlt-3',
+    type: 'MOST_LIKELY_TO',
+    prompt: 'Who is most likely to fall asleep first at tonight’s after-party?',
+    category: 'Party Wildcard',
+    timerSeconds: 20,
+    penaltyShots: 1,
+  },
+  {
+    id: 'mlt-4',
+    type: 'MOST_LIKELY_TO',
+    prompt: 'Who is most likely to send a 3 AM group chat text about old memories?',
+    category: 'Spicy Nostalgia',
+    timerSeconds: 20,
+    penaltyShots: 1,
+  },
+  {
+    id: 'mlt-5',
+    type: 'MOST_LIKELY_TO',
+    prompt: 'Who is secretly the biggest gossip in the group?',
+    category: 'Reunion Secret',
+    timerSeconds: 20,
+    penaltyShots: 2,
+  },
+
+  // ROUND 2: HOT LEMON PASS
+  {
+    id: 'hl-1',
+    type: 'HOT_LEMON',
+    prompt: 'Quick! Name a song that was popular the year you all graduated!',
+    category: 'Hot Potato',
+    options: ['Song Ready! Pass Lemon!', 'Stumped... Take Shot!'],
+    timerSeconds: 15,
+    penaltyShots: 1,
+  },
+  {
+    id: 'hl-2',
+    type: 'HOT_LEMON',
+    prompt: 'Spell the word "LEMONADE" backwards in 5 seconds!',
+    category: 'Hot Potato',
+    options: ['E-D-A-N-O-M-E-L (Passed!)', 'I failed! Take Shot!'],
+    timerSeconds: 12,
+    penaltyShots: 1,
+  },
+  {
+    id: 'hl-3',
+    type: 'HOT_LEMON',
+    prompt: 'Name 3 people in this room without looking at your phone!',
+    category: 'Hot Potato',
+    options: ['Named 3! Pass!', 'Mind Blanked! Take Shot!'],
+    timerSeconds: 10,
+    penaltyShots: 1,
+  },
+  {
+    id: 'hl-4',
+    type: 'HOT_LEMON',
+    prompt: 'Imitate the funniest professor or group friend for 3 seconds!',
+    category: 'Hot Potato',
+    options: ['Nailed It! Pass!', 'Embarrassed! Take Shot!'],
+    timerSeconds: 10,
+    penaltyShots: 2,
+  },
+
+  // ROUND 3: TRUTH, DARE OR SKIP
+  {
+    id: 'td-1',
+    type: 'TRUTH_DARE',
+    prompt: 'DARE: Text your partner or crush right now: "The lemon made me do it 🍋" or take 2 shots!',
+    category: 'Party Wildcard',
+    timerSeconds: 25,
+    penaltyShots: 2,
+  },
+  {
+    id: 'td-2',
+    type: 'TRUTH_DARE',
+    prompt: 'TRUTH: What was your most awkward or embarrassing moment from school/college?',
+    category: 'Reunion Secret',
+    timerSeconds: 25,
+    penaltyShots: 1,
+  },
+  {
+    id: 'td-3',
+    type: 'TRUTH_DARE',
+    prompt: 'DARE: Do a 10-second dramatic victory dance in front of everyone or take a Lemon Shot!',
+    category: 'Party Wildcard',
+    timerSeconds: 25,
+    penaltyShots: 1,
+  },
+  {
+    id: 'td-4',
+    type: 'TRUTH_DARE',
+    prompt: 'TRUTH: Confess one secret crush you had back in the day that no one knew about!',
+    category: 'Spicy Nostalgia',
+    timerSeconds: 25,
+    penaltyShots: 2,
+  },
+];
